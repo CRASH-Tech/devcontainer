@@ -1,0 +1,90 @@
+if [[ ${EUID} == 0 ]]; then
+    PS1='\[\033[01;31m\]\h\[\033[01;34m\] \W \$\[\033[00m\] '
+else
+    PS1='\[\033[01;32m\]\u@\h\[\033[01;34m\] \w \$\[\033[00m\] '
+fi
+
+source /etc/bash_completion
+
+GPG_TTY=$(tty)
+export GPG_TTY
+
+export EDITOR=mcedit
+export PATH=$PATH:/usr/local/go/bin
+
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+
+alias k=kubectl
+alias h=helm
+alias tf='set -a && source .env && set +a && tofu'
+
+source <(kubectl completion bash)
+source <(helm completion bash)
+
+complete -F __start_kubectl k
+complete -F __start_helm h
+
+sett() {
+    cp ~/.talos/$1.yaml /tmp/talos-$1.yaml-$BASHPID
+    export TALOSCONFIG=/tmp/talos-$1.yaml-$BASHPID
+}
+
+setk() {
+    cp ~/.kube/$1.yaml /tmp/kube-$1.yaml-$BASHPID
+    export KUBECONFIG=/tmp/kube-$1.yaml-$BASHPID
+    kubectl config set-context --current --namespace=$2
+}
+
+setn() {
+    kubectl config set-context --current --namespace=$1
+}
+
+kshell() {
+    kubectl exec --stdin --tty $1 -- /bin/bash || kubectl exec --stdin --tty $1 -- /bin/sh
+}
+
+dshell() {
+    docker exec -it $1 /bin/bash || docker exec -it $1 /bin/sh
+}
+
+_setk() {
+    local cur
+    local kubeconfigs
+    local namespaces
+    _get_comp_words_by_ref -n : cur
+    kubeconfigs=$(ls $HOME/.kube | grep .yaml | sed 's/\.yaml//g')
+    case $COMP_CWORD in
+    1)
+        COMPREPLY=($(compgen -W "${kubeconfigs}" -- "${cur}"))
+        ;;
+    2)
+        namespaces=$(
+            setk ${COMP_WORDS[COMP_CWORD - 1]} >>/dev/null
+            kubectl get ns --no-headers -o custom-columns=":metadata.name"
+        )
+        COMPREPLY=($(compgen -W "${namespaces}" -- "${cur}"))
+        ;;
+    esac
+    return 0
+}
+complete -F _setk -o nospace setk
+
+_setn() {
+    local cur
+    local namespaces
+    _get_comp_words_by_ref -n : cur
+    namespaces=$(kubectl get ns --no-headers -o custom-columns=":metadata.name")
+    COMPREPLY=($(compgen -W "${namespaces}" -- "${cur}"))
+}
+complete -F _setn -o nospace setn
+
+_kshell() {
+    local cur
+    local pods
+    _get_comp_words_by_ref -n : cur
+    pods=$(kubectl get pods --no-headers -o custom-columns=":metadata.name")
+    COMPREPLY=($(compgen -W "${pods}" -- "${cur}"))
+}
+complete -F _kshell -o nospace kshell
