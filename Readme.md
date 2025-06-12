@@ -13,8 +13,8 @@ dev() {
         --mount type=bind,src=${HOME}/.ssh,dst=/home/crash/.ssh,ro \
         --mount type=bind,src=${HOME}/.kube,dst=/home/crash/.kube,ro \
         --mount type=bind,src=${HOME}/.talos,dst=/home/crash/.talos,ro \
-        --mount type=bind,src=${HOME}/.terraform.d,dst=/home/crash/.terraform.d,ro \
-        --mount type=bind,src=$(pwd),dst=/home/crash/project,ro \
+        --mount type=bind,src=${HOME}/.terraform.d,dst=/home/crash/.terraform.d \
+        --mount type=bind,src=$(pwd),dst=/home/crash/project \
         -it crashntech/devcontainer:1.0.0-${ARCH}
 }
 ```
