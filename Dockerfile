@@ -47,11 +47,11 @@ RUN pip install 'ansible-core==2.16.3'
 
 RUN wget https://dl.min.io/client/mc/release/linux-${ARCH}/mc -O /usr/local/bin/minio-mc
 
-RUN wget https://github.com/opentofu/opentofu/releases/download/v1.9.1/tofu_1.9.1_${ARCH}.deb -O tofu.deb
+RUN wget https://github.com/opentofu/opentofu/releases/download/v1.10.5/tofu_1.10.5_${ARCH}.deb -O tofu.deb
 RUN dpkg -i tofu.deb
 RUN rm tofu.deb
 
-RUN wget https://releases.hashicorp.com/vault/1.18.3/vault_1.18.3_linux_${ARCH}.zip -O vault.zip
+RUN wget https://releases.hashicorp.com/vault/1.20.3/vault_1.20.3_linux_${ARCH}.zip -O vault.zip
 RUN unzip -j vault.zip "vault" -d /usr/local/bin
 RUN rm vault.zip
 
@@ -67,12 +67,7 @@ RUN rm helm.tar.gz
 
 RUN chmod -R a+x /usr/local/bin
 
-RUN useradd -m crash
-
-COPY .my_bashrc /home/crash/.my_bashrc
-COPY .tofurc /home/crash/.tofurc
-
-RUN echo "source /home/crash/.my_bashrc" >>/home/crash/.bashrc
+RUN useradd -s /bin/bash -m crash
 
 USER crash
 WORKDIR /home/crash/project
