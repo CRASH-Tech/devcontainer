@@ -13,7 +13,7 @@ dev() {
         --mount type=bind,src=${HOME},dst=/home/crash \
         --mount type=bind,src=$(pwd),dst=/home/crash/project \
         -it crashntech/devcontainer:1.1.0-${ARCH} \
-        /bin/bash -rcfile .my_bashrc
+        /bin/bash -rcfile /home/crash/.my_bashrc
 }
 
 dev86() {
@@ -24,6 +24,6 @@ dev86() {
         --mount type=bind,src=$(pwd),dst=/home/crash/project \
         --platform linux/amd64 \
         -it crashntech/devcontainer:1.1.0-amd64 \
-        /bin/bash -rcfile .my_bashrc
+        /bin/bash -rcfile /home/crash/.my_bashrc
 }
 ```
