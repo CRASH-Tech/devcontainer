@@ -2,6 +2,7 @@ FROM ubuntu:22.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG ARCH=
+ARG PLATFORM=
 
 USER root
 
@@ -41,11 +42,14 @@ RUN apt -y install unzip
 RUN apt -y install valgrind
 RUN apt -y install wget
 RUN apt -y install zip
+RUN apt -y install gpg
+RUN apt -y install age
 
 RUN pip install 'ansible==9.2.0'
 RUN pip install 'ansible-core==2.16.3'
 
 RUN wget https://dl.min.io/client/mc/release/linux-${ARCH}/mc -O /usr/local/bin/minio-mc
+RUN wget https://github.com/getsops/sops/releases/download/v3.11.0/sops-v3.11.0.${PLATFORM}.${ARCH} -O /usr/local/bin/sops
 
 RUN wget https://github.com/opentofu/opentofu/releases/download/v1.10.5/tofu_1.10.5_${ARCH}.deb -O tofu.deb
 RUN dpkg -i tofu.deb
@@ -64,6 +68,8 @@ RUN wget https://dl.k8s.io/release/v1.33.0/bin/linux/${ARCH}/kubectl -O /usr/loc
 RUN wget https://get.helm.sh/helm-v3.18.2-linux-${ARCH}.tar.gz -O helm.tar.gz
 RUN tar -C /usr/local/bin -xzf helm.tar.gz linux-${ARCH}/helm --transform="s|linux-${ARCH}/helm|helm|"
 RUN rm helm.tar.gz
+
+
 
 RUN chmod -R a+x /usr/local/bin
 
