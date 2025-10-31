@@ -1,7 +1,7 @@
 ### Build
 ```
-docker build . -t crashntech/devcontainer:1.1.1-arm64 --platform linux/arm64 --build-arg ARCH=arm64 --build-arg PLATFORM=darwin
-docker build . -t crashntech/devcontainer:1.1.1-amd64 --platform linux/amd64 --build-arg ARCH=amd64 --build-arg PLATFORM=linux
+docker build . -t crashntech/devcontainer:1.1.1-arm64 --platform linux/arm64 --build-arg ARCH=arm64
+docker build . -t crashntech/devcontainer:1.1.1-amd64 --platform linux/amd64 --build-arg ARCH=amd64
 ```
 
 ### Alias

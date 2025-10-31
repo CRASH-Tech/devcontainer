@@ -2,7 +2,6 @@ FROM ubuntu:22.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG ARCH=
-ARG PLATFORM=
 
 USER root
 
@@ -49,7 +48,7 @@ RUN pip install 'ansible==9.2.0'
 RUN pip install 'ansible-core==2.16.3'
 
 RUN wget https://dl.min.io/client/mc/release/linux-${ARCH}/mc -O /usr/local/bin/minio-mc
-RUN wget https://github.com/getsops/sops/releases/download/v3.11.0/sops-v3.11.0.${PLATFORM}.${ARCH} -O /usr/local/bin/sops
+RUN wget https://github.com/getsops/sops/releases/download/v3.11.0/sops-v3.11.0.linux.${ARCH} -O /usr/local/bin/sops
 
 RUN wget https://github.com/opentofu/opentofu/releases/download/v1.10.5/tofu_1.10.5_${ARCH}.deb -O tofu.deb
 RUN dpkg -i tofu.deb
